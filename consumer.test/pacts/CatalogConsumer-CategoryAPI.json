@@ -1,0 +1,52 @@
+{
+  "consumer": {
+    "name": "CatalogConsumer"
+  },
+  "interactions": [
+    {
+      "description": "GET - all categories",
+      "providerStates": [
+        {
+          "name": "Null - Get All"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept": "application/json"
+        },
+        "method": "GET",
+        "path": "/api/v1/category"
+      },
+      "response": {
+        "body": [
+          {
+            "id": "83c8ad80-3791-4c2f-9d7c-a26a7e008336",
+            "name": "category1",
+            "productCount": 3
+          },
+          {
+            "id": "4176e471-e547-4a67-bdab-031542219ce5",
+            "name": "category2",
+            "productCount": 5
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.3.11",
+      "models": "0.4.5"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "CategoryAPI"
+  }
+}
