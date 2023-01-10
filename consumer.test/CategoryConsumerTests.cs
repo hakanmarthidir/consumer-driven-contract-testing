@@ -5,23 +5,42 @@ using System.Net;
 using Newtonsoft.Json.Serialization;
 using Moq;
 using Moq.Protected;
+using Xunit.Abstractions;
+using PactNet.Infrastructure.Outputters;
 
 namespace consumer.test
 {
+    public class XUnitOutput : IOutput
+    {
+        private readonly ITestOutputHelper output;
+
+        public XUnitOutput(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
+        public void WriteLine(string line)
+        {
+            this.output.WriteLine(line);
+        }
+    }
+
+
     public class CategoryConsumerTests
     {
 
         private readonly IPactBuilderV3 pactBuilder;
 
-        public CategoryConsumerTests()
+        public CategoryConsumerTests(ITestOutputHelper testOutputHelper)
         {
             var config = new PactConfig
             {
-                PactDir = "../../../pacts/",
+                PactDir = "../../../../pacts/",
                 DefaultJsonSettings = new JsonSerializerSettings
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
-                }
+                },
+                Outputters = new[] { new XUnitOutput(testOutputHelper) }
             };
 
             var pact = Pact.V3("CatalogConsumer", "CategoryAPI", config);
@@ -32,8 +51,8 @@ namespace consumer.test
         public async Task GetCategory_ReturnsAllActiveCategories()
         {
             List<CategoryDto> mockCategories = new List<CategoryDto>() {
-                    new CategoryDto() { Id = Guid.NewGuid(), Name = "category1", ProductCount = 3 },
-                    new CategoryDto() { Id = Guid.NewGuid(), Name = "category2", ProductCount = 5} };
+                    new CategoryDto() { Id = new Guid("62380d5e-2554-49c9-a814-13ab1f50d73e"), Name = "category1", ProductCount = 3 },
+                    new CategoryDto() { Id = new Guid("1c319a81-22b6-4971-b774-4963db5099db"), Name = "category2", ProductCount = 5} };
 
             this.pactBuilder
                 .UponReceiving("GET - all categories")
